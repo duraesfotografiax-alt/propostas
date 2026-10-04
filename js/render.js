@@ -21,6 +21,22 @@
     fb: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-7.5h2.6l.4-3h-3V8.6c0-.9.3-1.5 1.5-1.5h1.6V4.4a21 21 0 0 0-2.3-.1c-2.3 0-3.9 1.4-3.9 4v2.2H7.8v3h2.6V21h3.1Z"/></svg>'
   };
 
+  function parceriaCerimonial(CE, cliente) {
+    var wa = waDigits(CE.whatsapp), ig = String(CE.instagram || "").replace(/^@/, "").trim();
+    var msg = "Olá, " + CE.nome.split(" ")[0] + "! Vim pelo orçamento da Durães Fotografia" + (cliente ? " (" + cliente + ")" : "") + " e gostaria de saber mais sobre o cerimonial.";
+    var tel = String(CE.whatsapp || "").replace(/\D/g, "").replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
+    return '<section class="cerim" id="parceria"><div class="wrap">' +
+      '<div class="sec-head"><h2 class="script">Nossa parceria</h2><p>Durães Fotografia + ' + esc(CE.empresa) + "</p></div>" +
+      '<div class="cerim-card"><figure><img src="' + img(CE.foto) + '" alt="Equipe da ' + esc(CE.empresa) + ' com os noivos"></figure>' +
+      '<div class="cerim-txt"><div class="cerim-id"><img src="' + img(CE.logo) + '" alt="Logo ' + esc(CE.empresa) + '"><div><b>' + esc(CE.empresa) + "</b><span>Cerimonial com " + esc(CE.nome) + "</span></div></div>" +
+      (CE.textos || []).map(function (t) { return "<p>" + esc(t) + "</p>"; }).join("") +
+      ((CE.destaques || []).length ? "<ul>" + CE.destaques.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>" : "") +
+      '<div class="cerim-contato">' + (tel ? "<span>WhatsApp " + esc(tel) + "</span>" : "") + (CE.email ? '<a href="mailto:' + esc(CE.email) + '">' + esc(CE.email) + "</a>" : "") +
+      (ig ? '<a href="https://www.instagram.com/' + esc(ig) + '" target="_blank" rel="noopener">@' + esc(ig) + "</a>" : "") + "</div>" +
+      (wa ? '<a class="btn dark" href="https://wa.me/' + wa + "?text=" + encodeURIComponent(msg) + '" target="_blank" rel="noopener">' + ICON.wa + "Falar com a " + esc(CE.nome.split(" ")[0]) + "</a>" : "") +
+      "</div></div></div></section>";
+  }
+
   window.renderProposta = function (el, d) {
     var T = M[d.modelo] || M.civil;
     document.documentElement.style.setProperty("--taupe-deep", T.cor || "#736C57");
@@ -56,7 +72,8 @@
     }).join("");
 
     var P = d.parceira || {}, pig = String(P.instagram || "").replace(/^@/, "").trim();
-    var partner = (P.nome && P.nome.trim()) ?
+    var CE = window.CERIMONIALISTA;
+    var partner = (d.parceria === true && CE) ? parceriaCerimonial(CE, cliente) : (P.nome && P.nome.trim()) ?
       '<section class="partner"><div class="wrap card"><h2 class="script">Nossa parceria</h2><div class="name">' + esc(P.nome) + "</div>" +
       (P.funcao ? '<div class="spaced" style="color:var(--muted)">' + esc(P.funcao) + "</div>" : "") +
       (P.texto ? "<p>" + esc(P.texto) + "</p>" : "") +

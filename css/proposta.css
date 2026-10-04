@@ -131,3 +131,23 @@ a{color:inherit}
 .admin-bar a{color:inherit}
 @media (max-width:560px){.members{gap:18px 14px}.member{width:96px}.member img{width:92px;height:92px}.member b{font-size:.9rem}}
 .hero.colorido>img{filter:brightness(.5) saturate(.9)}
+
+/* parceria cerimonialista */
+.cerim{padding:88px 0;background:var(--paper-2)}
+.cerim-card{display:grid;grid-template-columns:1fr;background:var(--paper);border:1px solid var(--line);border-radius:24px;overflow:hidden;max-width:980px;margin-inline:auto}
+.cerim-card figure{margin:0;aspect-ratio:4/3;overflow:hidden}
+.cerim-card figure img{width:100%;height:100%;object-fit:cover;object-position:50% 30%}
+.cerim-txt{padding:28px 24px 30px;display:grid;gap:14px;align-content:center}
+.cerim-id{display:flex;align-items:center;gap:14px}
+.cerim-id img{width:58px;height:58px;border-radius:50%;object-fit:cover;border:1px solid var(--line)}
+.cerim-id b{display:block;font-size:1.15rem;font-weight:600;letter-spacing:.04em}
+.cerim-id span{font-size:.9rem;color:var(--muted)}
+.cerim-txt p{margin:0;color:var(--ink)}
+.cerim-txt ul{margin:0;padding:0;list-style:none;display:grid;gap:6px;color:var(--muted);font-size:.95rem}
+.cerim-txt li{position:relative;padding-left:20px}
+.cerim-txt li::before{content:"";position:absolute;left:2px;top:.62em;width:7px;height:7px;border-radius:50%;border:1.5px solid currentColor}
+.cerim-contato{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.92rem;color:var(--muted)}
+.cerim-contato a{color:var(--ink)}
+.cerim-txt .btn{justify-self:start;margin-top:4px}
+@media (min-width:820px){.cerim-card{grid-template-columns:1fr 1fr}.cerim-card figure{aspect-ratio:auto;min-height:100%}.cerim-txt{padding:40px 38px}}
+.cerim .btn{background:var(--ink);color:var(--paper);border-color:var(--ink)}
