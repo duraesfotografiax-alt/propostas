@@ -153,7 +153,7 @@ a{color:inherit}
 .cerim .btn{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 
 /* vídeos */
-.vids{padding:20px 0 96px;background:var(--paper)}
+.vids{padding:96px 0 0;background:var(--paper)}
 .reels{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 @media (min-width:860px){.reels{grid-template-columns:repeat(4,1fr);gap:16px}}
 .reel{position:relative;border-radius:18px;overflow:hidden;aspect-ratio:9/16;background:#111;cursor:pointer;border:1px solid var(--line)}
