@@ -43,17 +43,26 @@ window.MODELOS = {
   },
 
   evento: {
-    nome: "Evento",
-    frase: "Queremos emocionar você contando a história de um dia que merece ser lembrado para sempre.",
-    fotoFrase: "pre_c",
+    nome: "Eventos",
+    frase: "Do corporativo à comemoração em família: registramos cada momento do seu evento com o cuidado que ele merece.",
+    hero: "e_palco", heroColorido: true,
+    fotoFrase: "e_formatura",
+    fotoEquipe: "e_banda",
+    fotoDepoimento: "e_homenagem",
+    fotoFinal: "e_show",
+    subtitulo: "Fotografia de eventos",
     autorDepoimento: "Cliente atendida pela Durães Fotografia",
-    galeria: ["party", "q_a", "i_c", "pre_a", "q_g", "w_c", "i_d", "pre_b"],
-    fotosPacotes: ["party", "pre_a", "m_b"],
-    nota: "Todos os pacotes podem ser parcelados sem juros. Seria maravilhoso marcarmos uma reunião para eu mostrar como posso deixar o seu dia ainda mais especial e tirar todas as dúvidas da proposta.",
+    galeria: ["e_palco", "e_formatura", "e_amigas", "e_cantora", "e_bateria", "e_homenagem", "e_show", "e_bar", "e_baixo", "e_teclado", "e_musico", "e_banda"],
+    fotosPacotes: ["e_bar", "e_cantora", "e_amigas"],
+    nota: "Todos os pacotes podem ser parcelados sem juros. Seria maravilhoso marcarmos uma reunião para entender o seu evento e tirar todas as dúvidas da proposta.",
     pacotes: [
       { nome: "Cobertura do evento", sub: "Eternizando momentos",
-        itens: ["Fotografia do evento", "Fotos entregues em suporte digital"],
+        itens: ["Fotografia do evento: convidados, palco, homenagens e detalhes", "Fotos entregues em suporte digital"],
         inclusos: ["1 fotógrafo", "Fotos com edição e tratamento premium", "Todas as fotos por link, com download em alta resolução"],
+        valor: "", parcelas: "Até 3x sem juros", destaque: false },
+      { nome: "Foto e filmagem", sub: "Eternizando momentos",
+        itens: ["Fotografia completa do evento", "Filmagem dos melhores momentos", "Fotos e vídeo entregues em suporte digital"],
+        inclusos: ["1 fotógrafo", "1 videomaker", "Fotos e vídeo com edição e tratamento premium", "Tudo por link, com download em alta resolução"],
         valor: "", parcelas: "Até 3x sem juros", destaque: true }
     ]
   },
