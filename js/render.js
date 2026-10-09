@@ -15,11 +15,29 @@
     return d ? "https://wa.me/" + d + "?text=" + encodeURIComponent(msg) : "https://ig.me/m/" + C.INSTAGRAM;
   }
   var ICON = {
+    mute: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="m17 9 4 6M21 9l-4 6"/></svg>',
+    som: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>',
     wa: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.4.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg>',
     ig: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none"/></svg>',
     pf: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-8 9"/></svg>',
     fb: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-7.5h2.6l.4-3h-3V8.6c0-.9.3-1.5 1.5-1.5h1.6V4.4a21 21 0 0 0-2.3-.1c-2.3 0-3.9 1.4-3.9 4v2.2H7.8v3h2.6V21h3.1Z"/></svg>'
   };
+
+  function parceriaCerimonial(CE, cliente) {
+    var wa = waDigits(CE.whatsapp), ig = String(CE.instagram || "").replace(/^@/, "").trim();
+    var msg = "Olá, " + CE.nome.split(" ")[0] + "! Vim pelo orçamento da Durães Fotografia" + (cliente ? " (" + cliente + ")" : "") + " e gostaria de saber mais sobre o cerimonial.";
+    var tel = String(CE.whatsapp || "").replace(/\D/g, "").replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
+    return '<section class="cerim" id="parceria"><div class="wrap">' +
+      '<div class="sec-head"><h2 class="script">Nossa parceria</h2><p>Durães Fotografia + ' + esc(CE.empresa) + "</p></div>" +
+      '<div class="cerim-card"><figure><img src="' + img(CE.foto) + '" alt="Equipe da ' + esc(CE.empresa) + ' com os noivos"></figure>' +
+      '<div class="cerim-txt"><div class="cerim-id"><img src="' + img(CE.logo) + '" alt="Logo ' + esc(CE.empresa) + '"><div><b>' + esc(CE.empresa) + "</b><span>Cerimonial com " + esc(CE.nome) + "</span></div></div>" +
+      (CE.textos || []).map(function (t) { return "<p>" + esc(t) + "</p>"; }).join("") +
+      ((CE.destaques || []).length ? "<ul>" + CE.destaques.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>" : "") +
+      '<div class="cerim-contato">' + (tel ? "<span>WhatsApp " + esc(tel) + "</span>" : "") + (CE.email ? '<a href="mailto:' + esc(CE.email) + '">' + esc(CE.email) + "</a>" : "") +
+      (ig ? '<a href="https://www.instagram.com/' + esc(ig) + '" target="_blank" rel="noopener">@' + esc(ig) + "</a>" : "") + "</div>" +
+      (wa ? '<a class="btn dark" href="https://wa.me/' + wa + "?text=" + encodeURIComponent(msg) + '" target="_blank" rel="noopener">' + ICON.wa + "Falar com a " + esc(CE.nome.split(" ")[0]) + "</a>" : "") +
+      "</div></div></div></section>";
+  }
 
   window.renderProposta = function (el, d) {
     var T = M[d.modelo] || M.civil;
@@ -56,7 +74,9 @@
     }).join("");
 
     var P = d.parceira || {}, pig = String(P.instagram || "").replace(/^@/, "").trim();
-    var partner = (P.nome && P.nome.trim()) ?
+    var CE = window.CERIMONIALISTA;
+    var MI = window.MIDIA || {}, temVideos = (MI.modelos || []).indexOf(d.modelo) > -1;
+    var partner = (d.parceria === true && CE) ? parceriaCerimonial(CE, cliente) : (P.nome && P.nome.trim()) ?
       '<section class="partner"><div class="wrap card"><h2 class="script">Nossa parceria</h2><div class="name">' + esc(P.nome) + "</div>" +
       (P.funcao ? '<div class="spaced" style="color:var(--muted)">' + esc(P.funcao) + "</div>" : "") +
       (P.texto ? "<p>" + esc(P.texto) + "</p>" : "") +
@@ -91,7 +111,16 @@
 
       partner +
 
-      (T.depoimento === false ? "" : '<section class="testi"><figure><img src="' + img(T.fotoDepoimento || "couple") + '" alt=""></figure><div class="txt"><h2 class="script">Depoimento</h2><blockquote>' +
+      (temVideos && MI.trabalhos && MI.trabalhos.length ? '<section class="vids" data-vid><div class="wrap"><div class="sec-head"><h2 class="script">Nossos trabalhos em vídeo</h2><p>Toque em um vídeo para ouvir com som.</p></div><div class="reels">' +
+        MI.trabalhos.map(function (v) {
+          return '<div class="reel"><video data-src="videos/' + esc(v.arquivo) + '.mp4" poster="videos/' + esc(v.arquivo) + '.jpg" muted loop playsinline preload="none"></video><span class="rtag">' + esc(v.titulo || "") + '</span><span class="snd" aria-hidden="true">' + ICON.mute + "</span></div>";
+        }).join("") + "</div></div></section>" : "") +
+
+      (T.depoimento === false ? "" : (temVideos && MI.depoimentos && MI.depoimentos.length) ?
+        '<section class="testi testi-v" data-vid><div class="wrap"><div class="sec-head"><h2 class="script">Depoimento' + (MI.depoimentos.length > 1 ? "s" : "") + '</h2><p>Quem viveu esse dia com a gente conta como foi.</p></div><div class="dep-grid n' + Math.min(MI.depoimentos.length, 3) + '">' +
+        MI.depoimentos.map(function (k) { return '<video src="videos/' + esc(k) + '.mp4" poster="videos/' + esc(k) + '.jpg" controls playsinline preload="none"></video>'; }).join("") +
+        "</div></div></section>" :
+      '<section class="testi"><figure><img src="' + img(T.fotoDepoimento || "couple") + '" alt=""></figure><div class="txt"><h2 class="script">Depoimento</h2><blockquote>' +
       "<p>Agradeço pelo seu trabalho e da equipe que se dedicou a noite toda pra tá ali registrando os momentos. Obrigada por fazer parte do meu sonho.</p>" +
       "<p>Vocês foram incríveis. Muito obrigada por tudo! Deus abençoe sempre o trabalho de vocês, e que venham muitos e muitos trabalhos na carreira de vocês. Sucesso sempre, porque vocês merecem!</p>" +
       "</blockquote><cite>" + esc(T.autorDepoimento || "Noiva atendida pela Durães Fotografia") + "</cite></div></section>") +
@@ -102,9 +131,44 @@
       '<img class="logo" src="' + img("logo") + '" alt="Durães Fotografia"><div class="sub">' + esc(T.subtitulo || "Fotografia de casamentos e eventos") + '</div>' +
       '<div class="socials"><a href="https://www.instagram.com/' + esc(C.INSTAGRAM) + '" target="_blank" rel="noopener">' + ICON.ig + "@" + esc(C.INSTAGRAM.toUpperCase()) + "</a>" +
       '<a href="https://www.facebook.com/' + esc(C.FACEBOOK) + '" target="_blank" rel="noopener">' + ICON.fb + "/" + esc(C.FACEBOOK.toUpperCase()) + "</a>" +
-      (C.PORTFOLIO ? '<a href="' + esc(C.PORTFOLIO) + '" target="_blank" rel="noopener">' + ICON.pf + "PORTFÓLIO</a>" : "") + "</div>" +
+      ((MI.portfolio || C.PORTFOLIO) ? '<a href="' + esc(MI.portfolio || C.PORTFOLIO) + '" target="_blank" rel="noopener">' + ICON.pf + "PORTFÓLIO</a>" : "") + "</div>" +
       (d.validade ? '<div class="valid">Proposta válida até ' + esc(d.validade) + "</div>" : "") +
       "</div></section>";
+    ligarVideos(el);
   };
+
+  /* Vídeos: somem se o arquivo não existir; os de trabalhos tocam mudos ao aparecer
+     e, ao tocar, ligam o som (pausando os outros). */
+  function ligarVideos(el) {
+    var todos = el.querySelectorAll("[data-vid] video");
+    todos.forEach(function (v) {
+      v.addEventListener("error", function () {
+        var box = v.closest(".reel") || v;
+        var sec = v.closest("[data-vid]");
+        box.remove();
+        if (sec && !sec.querySelector("video")) sec.remove();
+      });
+    });
+    var reels = el.querySelectorAll(".reel video");
+    function carregar(v) { if (!v.getAttribute("src") && v.dataset.src) v.src = v.dataset.src; }
+    var io = "IntersectionObserver" in window ? new IntersectionObserver(function (es) {
+      es.forEach(function (e) { var v = e.target; if (e.isIntersecting) { carregar(v); if (v.muted) v.play().catch(function () {}); } else v.pause(); });
+    }, { threshold: 0.35 }) : null;
+    reels.forEach(function (v) {
+      if (io) io.observe(v); else carregar(v);
+      v.parentNode.addEventListener("click", function () {
+        var ligar = v.muted;
+        todos.forEach(function (o) { if (o !== v) { o.muted = true; o.parentNode.classList && o.parentNode.classList.remove("on"); if (!o.closest(".reel")) o.pause(); } });
+        carregar(v); v.muted = !ligar ? true : false;
+        v.parentNode.classList.toggle("on", ligar);
+        v.parentNode.querySelector(".snd").innerHTML = ligar ? ICON.som : ICON.mute;
+        if (ligar) v.currentTime = 0;
+        v.play().catch(function () {});
+      });
+    });
+    el.querySelectorAll(".testi-v video").forEach(function (v) {
+      v.addEventListener("play", function () { reels.forEach(function (r) { r.muted = true; r.parentNode.classList.remove("on"); r.parentNode.querySelector(".snd").innerHTML = ICON.mute; }); });
+    });
+  }
   window.renderUtil = { esc: esc, img: img, waDigits: waDigits };
 })();

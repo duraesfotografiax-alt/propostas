@@ -151,3 +151,18 @@ a{color:inherit}
 .cerim-txt .btn{justify-self:start;margin-top:4px}
 @media (min-width:820px){.cerim-card{grid-template-columns:1fr 1fr}.cerim-card figure{aspect-ratio:auto;min-height:100%}.cerim-txt{padding:40px 38px}}
 .cerim .btn{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+/* vídeos */
+.vids{padding:20px 0 96px;background:var(--paper)}
+.reels{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media (min-width:860px){.reels{grid-template-columns:repeat(4,1fr);gap:16px}}
+.reel{position:relative;border-radius:18px;overflow:hidden;aspect-ratio:9/16;background:#111;cursor:pointer;border:1px solid var(--line)}
+.reel video{width:100%;height:100%;object-fit:cover;display:block}
+.reel.on{outline:2px solid var(--gold);outline-offset:2px}
+.reel .rtag{position:absolute;left:10px;bottom:10px;background:rgba(0,0,0,.55);color:#fff;border-radius:999px;padding:5px 11px;font-size:.72rem;letter-spacing:.08em}
+.reel .snd{position:absolute;right:10px;top:10px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.55);color:#fff}
+.reel .snd svg{width:18px;height:18px}
+.testi-v{display:block;padding:96px 0}
+.dep-grid{display:grid;gap:16px;justify-content:center;grid-template-columns:minmax(0,360px)}
+@media (min-width:760px){.dep-grid.n2{grid-template-columns:repeat(2,minmax(0,340px))}.dep-grid.n3{grid-template-columns:repeat(3,minmax(0,320px))}}
+.dep-grid video{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:20px;background:#000;border:1px solid var(--line)}
