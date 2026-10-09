@@ -11,7 +11,7 @@ window.MIDIA = {
   modelos: ["casamento", "civil"],
 
   // Depoimentos em vídeo (substituem o texto do depoimento)
-  depoimentos: ["depoimento-1"],
+  depoimentos: ["depoimento-1", "depoimento-2"],
 
   // "Nossos trabalhos em vídeo"
   trabalhos: [
