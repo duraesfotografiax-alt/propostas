@@ -4,7 +4,7 @@
    =========================================================== */
 window.CONFIG = {
   // Supabase: Project Settings > API (veja o LEIA-ME)
-  SUPABASE_URL: "https://cautftwtokojmegtdkqd.supabase.co/rest/v1/",
+  SUPABASE_URL: "https://cautftwtokojmegtdkqd.supabase.co",
   SUPABASE_KEY: "sb_publishable_SeFncvVWtmgd7Rciqy25CQ_H8C3OjVc",
 
   // WhatsApp de vocês (com DDD, só números)
