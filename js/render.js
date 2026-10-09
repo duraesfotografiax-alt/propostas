@@ -100,6 +100,11 @@
       "<p>Estamos comprometidos em fornecer um serviço excepcional, buscando a essência de cada ocasião e expressando-a artisticamente. Esperamos ter a oportunidade de trabalhar com você e eternizar momentos preciosos juntos.</p>" +
       '<div class="members">' + team + "</div></div></section>" +
 
+      (temVideos && MI.trabalhos && MI.trabalhos.length ? '<section class="vids" data-vid><div class="wrap"><div class="sec-head"><h2 class="script">Nossos trabalhos em vídeo</h2><p>Toque em um vídeo para ouvir com som.</p></div><div class="reels">' +
+        MI.trabalhos.map(function (v) {
+          return '<div class="reel"><video data-src="videos/' + esc(v.arquivo) + '.mp4" poster="videos/' + esc(v.arquivo) + '.jpg" muted loop playsinline preload="none"></video><span class="rtag">' + esc(v.titulo || "") + '</span><span class="snd" aria-hidden="true">' + ICON.mute + "</span></div>";
+        }).join("") + "</div></div></section>" : "") +
+
       '<section class="gallery"><div class="wrap"><div class="sec-head"><h2 class="script">Nosso olhar</h2><p>Alguns momentos que já eternizamos.</p></div><div class="masonry">' +
       T.galeria.map(function (k) { return '<img src="' + img(k) + '" alt="Foto de trabalho da Durães Fotografia" loading="lazy">'; }).join("") +
       "</div></div></section>" +
@@ -110,11 +115,6 @@
       (d.nota ? '<p class="pay-note">' + esc(d.nota) + "</p>" : "") + "</div></section>" +
 
       partner +
-
-      (temVideos && MI.trabalhos && MI.trabalhos.length ? '<section class="vids" data-vid><div class="wrap"><div class="sec-head"><h2 class="script">Nossos trabalhos em vídeo</h2><p>Toque em um vídeo para ouvir com som.</p></div><div class="reels">' +
-        MI.trabalhos.map(function (v) {
-          return '<div class="reel"><video data-src="videos/' + esc(v.arquivo) + '.mp4" poster="videos/' + esc(v.arquivo) + '.jpg" muted loop playsinline preload="none"></video><span class="rtag">' + esc(v.titulo || "") + '</span><span class="snd" aria-hidden="true">' + ICON.mute + "</span></div>";
-        }).join("") + "</div></div></section>" : "") +
 
       (T.depoimento === false ? "" : (temVideos && MI.depoimentos && MI.depoimentos.length) ?
         '<section class="testi testi-v" data-vid><div class="wrap"><div class="sec-head"><h2 class="script">Depoimento' + (MI.depoimentos.length > 1 ? "s" : "") + '</h2><p>Quem viveu esse dia com a gente conta como foi.</p></div><div class="dep-grid n' + Math.min(MI.depoimentos.length, 3) + '">' +
