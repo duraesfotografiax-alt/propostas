@@ -17,7 +17,7 @@
   }
   function novaProposta(modelo) {
     var T = M[modelo];
-    return { modelo: modelo, cliente: "", clienteWhats: "", data: "", local: "", validade: "", nota: T.nota, pacotes: clone(T.pacotes), parceira: {}, parceria: true, montar: true };
+    return { modelo: modelo, cliente: "", clienteWhats: "", data: "", local: "", validade: "", nota: T.nota, pacotes: clone(T.pacotes), parceira: {}, parceria: true, montar: true, mostrarPacotes: true };
   }
   function msgCliente(d, link) {
     var nome = (d.cliente || "").trim();
@@ -107,7 +107,11 @@
       '<div class="row">' + campo("Data do evento", "data", d.data, "text", "ex.: 14 de março de 2027") + campo("Local", "local", d.local, "text", "ex.: Cartório de Campinas") + "</div>" +
       '<div class="row">' + campo("WhatsApp do cliente (opcional)", "clienteWhats", d.clienteWhats, "tel", "ex.: 19 99999-9999") + campo("Proposta válida até (opcional)", "validade", d.validade, "text", "ex.: 30/11/2026") + "</div>" +
       '<p class="hint">O WhatsApp do cliente não aparece na proposta; serve só para o botão "Enviar no WhatsApp".</p></section>' +
-      pk + '<button class="btn" type="button" data-act="add">Adicionar pacote</button>' +
+      '<section class="card"><h2>Pacotes prontos</h2>' +
+      '<label class="chk"><input type="checkbox" data-k="mostrarPacotes" data-act="togglepk"' + (d.mostrarPacotes !== false ? " checked" : "") + '>Mostrar os pacotes prontos na proposta</label>' +
+      '<p class="hint">' + (d.mostrarPacotes !== false ? "Desmarque para a proposta mostrar só o “Monte o seu pacote”. Os pacotes ficam guardados." :
+        "Escondidos: o cliente vê só o “Monte o seu pacote”. Os pacotes continuam salvos aqui embaixo; é só marcar de novo para voltarem.") + "</p></section>" +
+      '<div' + (d.mostrarPacotes === false ? ' class="pk-off"' : "") + '>' + pk + '<button class="btn" type="button" data-act="add">Adicionar pacote</button></div>' +
       '<section class="card"><h2>Pagamento</h2>' + campo("Texto sobre parcelamento", "nota", d.nota, "area") + "</section>" +
       '<section class="card"><h2>Parceria com a cerimonialista</h2>' +
       '<label class="chk"><input type="checkbox" data-k="parceria"' + (d.parceria ? " checked" : "") + '>Mostrar a parceria com a ' + esc((window.CERIMONIALISTA ? window.CERIMONIALISTA.empresa + " (" + window.CERIMONIALISTA.nome + ")" : "cerimonialista")) + "</label>" +
@@ -128,8 +132,9 @@
   app.addEventListener("click", function (e) {
     var b = e.target.closest("[data-act]"); if (!b || aba !== "nova") return;
     var a = b.getAttribute("data-act"); lerForm();
-    if (a === "modelo") { var m = b.getAttribute("data-m"); var keep = { cliente: form.cliente, clienteWhats: form.clienteWhats, data: form.data, local: form.local, validade: form.validade, parceira: form.parceira, parceria: form.parceria, montar: form.montar };
+    if (a === "modelo") { var m = b.getAttribute("data-m"); var keep = { cliente: form.cliente, clienteWhats: form.clienteWhats, data: form.data, local: form.local, validade: form.validade, parceira: form.parceira, parceria: form.parceria, montar: form.montar, mostrarPacotes: form.mostrarPacotes };
       form = Object.assign(novaProposta(m), keep); telaForm(); }
+    if (a === "togglepk") { if (form.mostrarPacotes === false && form.montar === false) { form.montar = true; toast("Liguei o “Monte o seu pacote” para a proposta não ficar sem opções."); } telaForm(); return; }
     if (a === "add") { form.pacotes.push({ nome: "Novo pacote", sub: "Eternizando momentos", itens: [], inclusos: [], valor: "", parcelas: "Até 3x sem juros", destaque: false }); telaForm(); }
     if (a === "rm") { if (form.pacotes.length <= 1) { toast("A proposta precisa de pelo menos um pacote."); return; } form.pacotes.splice(+b.getAttribute("data-i"), 1); telaForm(); }
     if (a === "salvar") salvar(b);

@@ -51,3 +51,6 @@ textarea{min-height:96px;resize:vertical}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;z-index:60;font-size:.92rem;max-width:calc(100% - 32px);display:none}
 .toast.on{display:block}
 [hidden]{display:none!important}
+
+.pk-off{opacity:.45}
+.pk-off .card{border-style:dashed}

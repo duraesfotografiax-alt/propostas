@@ -160,7 +160,7 @@
       '<header class="hero' + (T.heroColorido ? " colorido" : "") + '"><img src="' + img(T.hero || "hero") + '" alt=""><div class="hero-in"><img class="logo" src="' + img("logo") + '" alt="Durães Fotografia">' +
       '<div class="kind spaced">Proposta de ' + esc(T.nome.toLowerCase()) + "</div>" +
       '<h1 class="script">' + (cliente ? esc(cliente) : "Para você") + "</h1>" + (meta ? '<div class="meta">' + meta + "</div>" : "") +
-      '<a class="btn" href="#pacotes">Ver pacotes</a></div><div class="scroll-cue" aria-hidden="true"></div></header>' +
+      (d.mostrarPacotes === false ? (d.montar !== false && window.MONTE ? '<a class="btn" href="#monte">Monte o seu pacote</a>' : "") : '<a class="btn" href="#pacotes">Ver pacotes</a>') + '</div><div class="scroll-cue" aria-hidden="true"></div></header>' +
 
       '<section class="quote"><figure><img src="' + img(T.fotoFrase) + '" alt=""></figure><blockquote>' + esc(T.frase) + "</blockquote></section>" +
 
@@ -179,10 +179,10 @@
       T.galeria.map(function (k) { return '<img src="' + img(k) + '" alt="Foto de trabalho da Durães Fotografia" loading="lazy">'; }).join("") +
       "</div></div></section>" +
 
-      '<section class="packages" id="pacotes"><div class="wrap"><div class="sec-head"><h2 class="script">Investimento</h2><p>' +
+      (d.mostrarPacotes === false ? "" : '<section class="packages" id="pacotes"><div class="wrap"><div class="sec-head"><h2 class="script">Investimento</h2><p>' +
       (pks.length > 1 ? "Escolha o pacote que combina com o seu dia." : "O pacote pensado para o seu dia.") + "</p></div>" +
       '<div class="pk-grid n' + Math.min(Math.max(pks.length, 1), 3) + '">' + pkHtml + "</div>" +
-      (d.nota ? '<p class="pay-note">' + esc(d.nota) + "</p>" : "") + "</div></section>" +
+      (d.nota ? '<p class="pay-note">' + esc(d.nota) + "</p>" : "") + "</div></section>") +
 
       monteHtml(d, cliente) +
 
