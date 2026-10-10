@@ -39,6 +39,76 @@
       "</div></div></div></section>";
   }
 
+  /* ---------- Monte o seu pacote ---------- */
+  function num(v) { return parseFloat(String(v == null ? "" : v).replace(/\./g, "").replace(",", ".")); }
+  function brl(n) { return n.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function semAcento(s) { return String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim(); }
+  function monteHtml(d, cliente) {
+    var MO = window.MONTE; if (!MO || d.montar === false) return "";
+    var lista = (MO.servicos || {})[d.modelo] || []; if (!lista.length) return "";
+    return '<section class="monte" id="monte"><div class="wrap"><div class="sec-head"><h2 class="script">Monte o seu pacote</h2>' +
+      "<p>Prefere algo do seu jeito? Escolha os serviços e a cidade do evento, e a gente monta a proposta para você.</p></div>" +
+      '<div class="mo-card"><fieldset class="mo-svcs"><legend>O que você quer?</legend>' +
+      lista.map(function (s, i) {
+        var v = num(s.valor);
+        return '<label class="mo-svc"><input type="checkbox" value="' + i + '"><span class="mo-box" aria-hidden="true"></span><span class="mo-n">' + esc(s.nome) + "</span>" +
+          (isNaN(v) ? "" : '<span class="mo-v">R$ ' + esc(brl(v)) + "</span>") + "</label>";
+      }).join("") + "</fieldset>" +
+      '<div class="mo-city"><label for="mo-cidade">Cidade do evento</label><input id="mo-cidade" list="mo-cidades" autocomplete="off" placeholder="Digite a cidade (SP)"' + (d.local ? ' value="' + esc(d.local) + '"' : "") + '>' +
+      '<datalist id="mo-cidades"></datalist><p class="mo-dist" id="mo-dist" aria-live="polite"></p></div>' +
+      '<div class="mo-sum" id="mo-sum" aria-live="polite"></div>' +
+      '<button class="btn dark mo-send" type="button" id="mo-send" disabled>' + ICON.wa + "Enviar para a Durães</button>" +
+      '<p class="mo-note">Os valores são estimados. A equipe confirma tudo com você pelo WhatsApp.</p></div></div></section>';
+  }
+  function ligarMonte(el, d, cliente) {
+    var MO = window.MONTE, sec = el.querySelector("#monte"); if (!sec || !MO) return;
+    var lista = MO.servicos[d.modelo] || [], cid = window.CIDADES_SP || [];
+    var input = sec.querySelector("#mo-cidade"), dl = sec.querySelector("#mo-cidades"), out = sec.querySelector("#mo-dist");
+    var sum = sec.querySelector("#mo-sum"), btn = sec.querySelector("#mo-send");
+    dl.innerHTML = cid.map(function (c) { return '<option value="' + esc(c[0]) + '">'; }).join("");
+    var origem = cid.filter(function (c) { return c[0] === MO.origem; })[0];
+    function km(c) {
+      if (!origem || !c) return null;
+      var R = 6371, r = Math.PI / 180, dLa = (c[1] - origem[1]) * r, dLo = (c[2] - origem[2]) * r;
+      var a = Math.sin(dLa / 2) * Math.sin(dLa / 2) + Math.cos(origem[1] * r) * Math.cos(c[1] * r) * Math.sin(dLo / 2) * Math.sin(dLo / 2);
+      return Math.round(2 * R * Math.asin(Math.sqrt(a)) * (MO.fatorEstrada || 1.25));
+    }
+    function cidade() { var n = semAcento(input.value); return cid.filter(function (c) { return semAcento(c[0]) === n; })[0] || null; }
+    function faixa(k) { var f = MO.faixas || []; for (var i = 0; i < f.length; i++) if (k <= f[i].ate) return f[i]; return f[f.length - 1] || null; }
+    function estado() {
+      var sel = Array.prototype.slice.call(sec.querySelectorAll(".mo-svc input:checked")).map(function (i) { return lista[+i.value]; });
+      var c = cidade(), k = c ? km(c) : null, fx = k == null ? null : faixa(k);
+      var taxaTxt = "", taxaVal = 0, taxaOk = true;
+      if (k != null && fx) {
+        if (fx.consulta) { taxaTxt = "deslocamento sob consulta"; taxaOk = false; }
+        else if (fx.taxa === 0) taxaTxt = "sem taxa de deslocamento";
+        else if (fx.taxa == null || isNaN(num(fx.taxa))) { taxaTxt = "taxa de deslocamento a combinar"; taxaOk = false; }
+        else { taxaVal = num(fx.taxa); taxaTxt = "taxa de deslocamento R$ " + brl(taxaVal); }
+      }
+      out.textContent = !input.value.trim() ? "" : !c ? "Escolha uma cidade da lista." :
+        (k < 5 ? "Mesma cidade da nossa equipe · " : "Aprox. " + k + " km de " + MO.origem + " · ") + taxaTxt;
+      var todosComValor = sel.length && sel.every(function (s) { return !isNaN(num(s.valor)); });
+      var total = sel.reduce(function (t, s) { return t + (num(s.valor) || 0); }, 0) + taxaVal;
+      sum.innerHTML = !sel.length ? "Escolha pelo menos um serviço." :
+        "<b>" + sel.length + (sel.length > 1 ? " serviços escolhidos" : " serviço escolhido") + "</b>" +
+        (todosComValor ? '<span class="mo-total">Total estimado: R$ ' + brl(total) + (k != null && !taxaOk ? " + deslocamento" : "") + "</span>" : "");
+      btn.disabled = !sel.length;
+      return { sel: sel, c: c, k: k, taxaTxt: taxaTxt, total: todosComValor ? total : null, taxaOk: taxaOk };
+    }
+    sec.addEventListener("change", estado); input.addEventListener("input", estado);
+    btn.addEventListener("click", function () {
+      var e = estado(); if (!e.sel.length) return;
+      var msg = "Olá! Vim pela proposta da Durães Fotografia" + (cliente ? " (" + cliente + ")" : "") + " e montei o meu pacote:\n" +
+        e.sel.map(function (s) { return "• " + s.nome; }).join("\n") +
+        (d.data ? "\n\nData: " + d.data : "") +
+        (e.c ? "\nCidade do evento: " + e.c[0] + (e.k >= 5 ? " (aprox. " + e.k + " km)" : "") : (input.value.trim() ? "\nCidade do evento: " + input.value.trim() : "")) +
+        (e.total != null ? "\nValor estimado: R$ " + brl(e.total) + (e.c && !e.taxaOk ? " + deslocamento" : "") : "") +
+        "\n\nPode montar o orçamento para mim?";
+      window.open(waLink(msg), "_blank", "noopener");
+    });
+    estado();
+  }
+
   window.renderProposta = function (el, d) {
     var T = M[d.modelo] || M.civil;
     document.documentElement.style.setProperty("--taupe-deep", T.cor || "#736C57");
@@ -114,6 +184,8 @@
       '<div class="pk-grid n' + Math.min(Math.max(pks.length, 1), 3) + '">' + pkHtml + "</div>" +
       (d.nota ? '<p class="pay-note">' + esc(d.nota) + "</p>" : "") + "</div></section>" +
 
+      monteHtml(d, cliente) +
+
       partner +
 
       (T.depoimento === false ? "" : (temVideos && MI.depoimentos && MI.depoimentos.length) ?
@@ -135,6 +207,7 @@
       (d.validade ? '<div class="valid">Proposta válida até ' + esc(d.validade) + "</div>" : "") +
       "</div></section>";
     ligarVideos(el);
+    ligarMonte(el, d, cliente);
   };
 
   /* Vídeos: somem se o arquivo não existir; os de trabalhos tocam mudos ao aparecer

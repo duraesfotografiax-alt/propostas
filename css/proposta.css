@@ -166,3 +166,28 @@ a{color:inherit}
 .dep-grid{display:grid;gap:16px;justify-content:center;grid-template-columns:minmax(0,360px)}
 @media (min-width:760px){.dep-grid.n2{grid-template-columns:repeat(2,minmax(0,340px))}.dep-grid.n3{grid-template-columns:repeat(3,minmax(0,320px))}}
 .dep-grid video{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:20px;background:#000;border:1px solid var(--line)}
+
+/* monte o seu pacote */
+.monte{padding:96px 0;background:var(--paper)}
+.mo-card{max-width:760px;margin:0 auto;background:var(--paper-2);border:1px solid var(--line);border-radius:24px;padding:26px 22px;display:grid;gap:22px}
+.mo-svcs{border:0;margin:0;padding:0;display:grid;gap:10px}
+.mo-svcs legend,.mo-city label{font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding:0}
+@media (min-width:640px){.mo-svcs{grid-template-columns:1fr 1fr}}
+.mo-svc{position:relative;display:flex;align-items:center;gap:12px;min-height:56px;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--paper);cursor:pointer}
+.mo-svc input{position:absolute;opacity:0;width:1px;height:1px}
+.mo-box{flex:none;width:22px;height:22px;border-radius:7px;border:1.5px solid var(--muted);display:grid;place-items:center}
+.mo-svc input:checked~.mo-box{background:var(--taupe-deep);border-color:var(--taupe-deep)}
+.mo-svc input:checked~.mo-box::after{content:"";width:10px;height:6px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translate(1px,-1px)}
+.mo-svc:has(input:checked){border-color:var(--taupe-deep)}
+.mo-svc input:focus-visible~.mo-box{outline:2px solid var(--gold);outline-offset:2px}
+.mo-n{flex:1;line-height:1.3}
+.mo-v{font-size:.9rem;color:var(--muted);white-space:nowrap}
+.mo-city{display:grid}
+.mo-city input{font:inherit;font-size:16px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:13px 14px;width:100%}
+.mo-dist{margin:8px 0 0;font-size:.92rem;color:var(--muted);min-height:1.4em}
+.mo-sum{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;justify-content:space-between;border-top:1px solid var(--line);padding-top:16px}
+.mo-sum b{font-weight:600}
+.mo-total{font-size:1.15rem;font-weight:500}
+.mo-send{width:100%}
+.mo-send[disabled]{opacity:.45;cursor:not-allowed}
+.mo-note{margin:-8px 0 0;font-size:.82rem;color:var(--muted);text-align:center}

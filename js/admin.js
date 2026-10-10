@@ -17,7 +17,7 @@
   }
   function novaProposta(modelo) {
     var T = M[modelo];
-    return { modelo: modelo, cliente: "", clienteWhats: "", data: "", local: "", validade: "", nota: T.nota, pacotes: clone(T.pacotes), parceira: {}, parceria: true };
+    return { modelo: modelo, cliente: "", clienteWhats: "", data: "", local: "", validade: "", nota: T.nota, pacotes: clone(T.pacotes), parceira: {}, parceria: true, montar: true };
   }
   function msgCliente(d, link) {
     var nome = (d.cliente || "").trim();
@@ -112,6 +112,9 @@
       '<section class="card"><h2>Parceria com a cerimonialista</h2>' +
       '<label class="chk"><input type="checkbox" data-k="parceria"' + (d.parceria ? " checked" : "") + '>Mostrar a parceria com a ' + esc((window.CERIMONIALISTA ? window.CERIMONIALISTA.empresa + " (" + window.CERIMONIALISTA.nome + ")" : "cerimonialista")) + "</label>" +
       '<p class="hint">Ligado: aparece a seção da parceria com foto, contatos e o botão para o WhatsApp dela. Desligado: a proposta sai sem essa parte.</p></section>' +
+      '<section class="card"><h2>Monte o seu pacote</h2>' +
+      '<label class="chk"><input type="checkbox" data-k="montar"' + (d.montar !== false ? " checked" : "") + '>Deixar o cliente montar o próprio pacote</label>' +
+      '<p class="hint">Ligado: aparece uma seção para o cliente escolher os serviços e a cidade do evento e enviar tudo pelo WhatsApp. Os serviços e valores ficam no arquivo js/pacote.js.</p></section>' +
       '<div class="sticky"><button class="btn dark big" type="button" data-act="salvar">' + (editandoId ? "Salvar alterações" : "Gerar link") + "</button></div>";
   }
   function lerForm() {
@@ -125,7 +128,7 @@
   app.addEventListener("click", function (e) {
     var b = e.target.closest("[data-act]"); if (!b || aba !== "nova") return;
     var a = b.getAttribute("data-act"); lerForm();
-    if (a === "modelo") { var m = b.getAttribute("data-m"); var keep = { cliente: form.cliente, clienteWhats: form.clienteWhats, data: form.data, local: form.local, validade: form.validade, parceira: form.parceira, parceria: form.parceria };
+    if (a === "modelo") { var m = b.getAttribute("data-m"); var keep = { cliente: form.cliente, clienteWhats: form.clienteWhats, data: form.data, local: form.local, validade: form.validade, parceira: form.parceira, parceria: form.parceria, montar: form.montar };
       form = Object.assign(novaProposta(m), keep); telaForm(); }
     if (a === "add") { form.pacotes.push({ nome: "Novo pacote", sub: "Eternizando momentos", itens: [], inclusos: [], valor: "", parcelas: "Até 3x sem juros", destaque: false }); telaForm(); }
     if (a === "rm") { if (form.pacotes.length <= 1) { toast("A proposta precisa de pelo menos um pacote."); return; } form.pacotes.splice(+b.getAttribute("data-i"), 1); telaForm(); }
