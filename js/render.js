@@ -47,7 +47,7 @@
     var MO = window.MONTE; if (!MO || d.montar === false) return "";
     var lista = (MO.servicos || {})[d.modelo] || []; if (!lista.length) return "";
     return '<section class="monte" id="monte"><div class="wrap"><div class="sec-head"><h2 class="script">Monte o seu pacote</h2>' +
-      "<p>Prefere algo do seu jeito? Escolha os serviços e a cidade do evento, e a gente monta a proposta para você.</p></div>" +
+      "<p>" + (d.modo === "montar" ? "Marque os serviços que você quer e a cidade do evento. A gente recebe no WhatsApp e prepara a sua proposta." : "Prefere algo do seu jeito? Escolha os serviços e a cidade do evento, e a gente monta a proposta para você.") + "</p></div>" +
       '<div class="mo-card"><fieldset class="mo-svcs"><legend>O que você quer?</legend>' +
       lista.map(function (s, i) {
         var v = num(s.valor);
@@ -155,6 +155,25 @@
 
     var ctaMsg = "Olá! Recebi a proposta da Durães Fotografia" + (cliente ? " (" + cliente + ")" : "") + " e gostaria de marcar uma reunião.";
     var hasWa = !!waDigits(C.WHATSAPP);
+
+    if (d.modo === "montar") {
+      var dm = Object.assign({}, d, { montar: true });
+      el.innerHTML =
+        '<header class="hero hero-mini' + (T.heroColorido ? " colorido" : "") + '"><img src="' + img(T.hero || "hero") + '" alt=""><div class="hero-in"><img class="logo" src="' + img("logo") + '" alt="Durães Fotografia">' +
+        '<div class="kind spaced">' + esc(T.nome) + "</div>" +
+        '<h1 class="script">' + (cliente ? esc(cliente) : "Para você") + "</h1>" + (meta ? '<div class="meta">' + meta + "</div>" : "") +
+        '<p class="hero-txt">Vamos montar o seu orçamento? Escolha o que você quer para o seu dia e envie para a gente.</p>' +
+        '<a class="btn" href="#monte">Monte o seu pacote</a></div></header>' +
+        monteHtml(dm, cliente) +
+        '<section class="cta cta-mini"><img src="' + img(T.fotoFinal || "party") + '" alt=""><div class="wrap">' +
+        "<p>Ficou com alguma dúvida? Fale direto com a gente.</p>" +
+        '<div class="btns"><a class="btn solid" href="' + esc(waLink("Olá! Recebi o link da Durães Fotografia" + (cliente ? " (" + cliente + ")" : "") + " e tenho uma dúvida.")) + '" target="_blank" rel="noopener">' + ICON.wa + "Falar no WhatsApp</a></div>" +
+        '<img class="logo" src="' + img("logo") + '" alt="Durães Fotografia">' +
+        '<div class="socials"><a href="https://www.instagram.com/' + esc(C.INSTAGRAM) + '" target="_blank" rel="noopener">' + ICON.ig + "@" + esc(C.INSTAGRAM.toUpperCase()) + "</a></div>" +
+        "</div></section>";
+      ligarMonte(el, dm, cliente);
+      return;
+    }
 
     el.innerHTML =
       '<header class="hero' + (T.heroColorido ? " colorido" : "") + '"><img src="' + img(T.hero || "hero") + '" alt=""><div class="hero-in"><img class="logo" src="' + img("logo") + '" alt="Durães Fotografia">' +

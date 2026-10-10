@@ -191,3 +191,9 @@ a{color:inherit}
 .mo-send{width:100%}
 .mo-send[disabled]{opacity:.45;cursor:not-allowed}
 .mo-note{margin:-8px 0 0;font-size:.82rem;color:var(--muted);text-align:center}
+
+/* modo 1º contato */
+.hero.hero-mini{min-height:min(78svh,720px)}
+.hero .hero-txt{margin:6px 0 0;max-width:34ch;font-size:1.05rem;opacity:.92}
+.cta.cta-mini .wrap{padding:72px 0 56px}
+.cta.cta-mini .logo{margin-top:20px}
