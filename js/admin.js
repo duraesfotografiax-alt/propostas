@@ -121,7 +121,7 @@
       '<button type="button" data-act="modo" data-v="montar" aria-pressed="' + (d.modo === "montar") + '">Só “Monte o seu pacote”</button>' +
       '<button type="button" data-act="modo" data-v="completa" aria-pressed="' + (d.modo !== "montar") + '">Proposta completa</button></div>' +
       '<p class="hint">' + (d.modo === "montar" ? "1º contato: o link mostra só o nome, a data e a escolha dos serviços. Quando o cliente enviar, edite esta proposta, mude para “Proposta completa”, ajuste os pacotes e salve: o link continua o mesmo." :
-        "O link mostra a apresentação completa: vídeos, fotos, equipe, pacotes, parceria e depoimentos.") + "</p></section>" +
+        "O link mostra a apresentação completa: vídeos, fotos, equipe, pacotes, parceria e depoimentos (sem o “Monte o seu pacote”).") + "</p></section>" +
       (d.escolha && (d.escolha.servicos || []).length ? '<section class="card" style="border-color:#2F6B45"><h2>O cliente montou o pacote</h2>' +
         '<ul style="margin:0;padding-left:20px">' + d.escolha.servicos.map(function (x) { return "<li>" + esc(x.nome) + "</li>"; }).join("") + "</ul>" +
         '<p class="hint">' + (d.escolha.cidade ? "Cidade: " + esc(d.escolha.cidade) + (d.escolha.km >= 5 ? " (aprox. " + d.escolha.km + " km)" : "") + " · " : "") + "Enviado em " + esc(dataBR(d.escolha.quando)) + "</p>" +
@@ -132,18 +132,11 @@
       '<div class="row">' + campo("WhatsApp do cliente (opcional)", "clienteWhats", d.clienteWhats, "tel", "ex.: 19 99999-9999") + campo("Proposta válida até (opcional)", "validade", d.validade, "text", "ex.: 30/11/2026") + "</div>" +
       '<p class="hint">O WhatsApp do cliente não aparece na proposta; serve só para o botão "Enviar no WhatsApp".</p></section>' +
       (d.modo === "montar" ? '<p class="hint" style="text-align:center;margin:6px 0 -4px">Os itens abaixo só aparecem na proposta completa. Ficam guardados aqui.</p><div class="pk-off">' : "<div>") +
-      '<section class="card"><h2>Pacotes prontos</h2>' +
-      '<label class="chk"><input type="checkbox" data-k="mostrarPacotes" data-act="togglepk"' + (d.mostrarPacotes !== false ? " checked" : "") + '>Mostrar os pacotes prontos na proposta</label>' +
-      '<p class="hint">' + (d.mostrarPacotes !== false ? "Desmarque para a proposta mostrar só o “Monte o seu pacote”. Os pacotes ficam guardados." :
-        "Escondidos: o cliente vê só o “Monte o seu pacote”. Os pacotes continuam salvos aqui embaixo; é só marcar de novo para voltarem.") + "</p></section>" +
-      '<div' + (d.mostrarPacotes === false ? ' class="pk-off"' : "") + '>' + pk + '<button class="btn" type="button" data-act="add">Adicionar pacote</button></div>' +
+      '<div>' + pk + '<button class="btn" type="button" data-act="add">Adicionar pacote</button></div>' +
       '<section class="card"><h2>Pagamento</h2>' + campo("Texto sobre parcelamento", "nota", d.nota, "area") + "</section>" +
       '<section class="card"><h2>Parceria com a cerimonialista</h2>' +
       '<label class="chk"><input type="checkbox" data-k="parceria"' + (d.parceria ? " checked" : "") + '>Mostrar a parceria com a ' + esc((window.CERIMONIALISTA ? window.CERIMONIALISTA.empresa + " (" + window.CERIMONIALISTA.nome + ")" : "cerimonialista")) + "</label>" +
       '<p class="hint">Ligado: aparece a seção da parceria com foto, contatos e o botão para o WhatsApp dela. Desligado: a proposta sai sem essa parte.</p></section>' +
-      '<section class="card"><h2>Monte o seu pacote</h2>' +
-      '<label class="chk"><input type="checkbox" data-k="montar"' + (d.montar !== false ? " checked" : "") + '>Deixar o cliente montar o próprio pacote</label>' +
-      '<p class="hint">Ligado: aparece uma seção para o cliente escolher os serviços e a cidade do evento e enviar tudo pelo WhatsApp. Os serviços e valores ficam no arquivo js/pacote.js.</p></section>' +
       "</div>" +
       '<div class="sticky"><button class="btn dark big" type="button" data-act="salvar">' + (editandoId ? "Salvar alterações" : "Gerar link") + "</button></div>";
   }
@@ -162,7 +155,7 @@
       form = Object.assign(novaProposta(m), keep); telaForm(); }
     if (a === "usarescolha") { if (aplicarEscolha(form)) { form.modo = "completa"; toast("Pacote criado com o que o cliente escolheu. Agora coloque o valor e o que está incluso."); } telaForm(); return; }
     if (a === "modo") { form.modo = b.getAttribute("data-v");
-      if (form.modo === "completa" && form.escolha && form.escolhaAplicada !== form.escolha.quando && aplicarEscolha(form)) toast("Montei o pacote com o que o cliente escolheu. Agora é só colocar o valor e salvar."); if (form.modo === "completa" && form.mostrarPacotes === false && form.montar === false) form.montar = true; telaForm(); return; }
+      if (form.modo === "completa" && form.escolha && form.escolhaAplicada !== form.escolha.quando && aplicarEscolha(form)) toast("Montei o pacote com o que o cliente escolheu. Agora é só colocar o valor e salvar."); telaForm(); return; }
     if (a === "togglepk") { if (form.mostrarPacotes === false && form.montar === false) { form.montar = true; toast("Liguei o “Monte o seu pacote” para a proposta não ficar sem opções."); } telaForm(); return; }
     if (a === "add") { form.pacotes.push({ nome: "Novo pacote", sub: "Eternizando momentos", itens: [], inclusos: [], valor: "", parcelas: "Até 3x sem juros", destaque: false }); telaForm(); }
     if (a === "rm") { if (form.pacotes.length <= 1) { toast("A proposta precisa de pelo menos um pacote."); return; } form.pacotes.splice(+b.getAttribute("data-i"), 1); telaForm(); }
