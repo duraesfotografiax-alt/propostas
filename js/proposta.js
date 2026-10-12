@@ -24,6 +24,7 @@
     return req.then(function (res) {
       if (res.error) throw res.error;
       if (!res.data) { estado("Não encontramos esta proposta. Fale com a gente que enviamos uma atualizada.", true); return; }
+      if (!logado) window.salvarEscolha = function (e) { return sb.rpc("salvar_escolha", { p_slug: slug, p_escolha: e }).then(function () {}, function () {}); };
       window.renderProposta(app, res.data);
       if (logado) {
         var bar = document.createElement("div");

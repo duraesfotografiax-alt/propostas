@@ -105,6 +105,11 @@
         (e.total != null ? "\nValor estimado: R$ " + brl(e.total) + (e.c && !e.taxaOk ? " + deslocamento" : "") : "") +
         "\n\nPode montar o orçamento para mim?";
       window.open(waLink(msg), "_blank", "noopener");
+      if (window.salvarEscolha) window.salvarEscolha({
+        modelo: d.modelo, quando: new Date().toISOString(),
+        servicos: e.sel.map(function (s) { return { nome: s.nome, valor: s.valor == null ? null : String(s.valor) }; }),
+        cidade: e.c ? e.c[0] : (input.value.trim() || null), km: e.k
+      });
     });
     estado();
   }
